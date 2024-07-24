@@ -1,0 +1,36 @@
+#in google colab
+# Step 1: Install yt-dlp
+!pip install yt-dlp
+
+# Step 2: Import necessary libraries and mount Google Drive
+from google.colab import drive
+import yt_dlp
+import os
+
+# Mount Google Drive
+drive.mount('/content/drive')
+
+# Step 3: Function to download YouTube video
+def download_youtube_video(youtube_url, save_path):
+    ydl_opts = {
+        'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+        'outtmpl': os.path.join(save_path, '%(title)s.%(ext)s'),
+    }
+
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(youtube_url, download=True)
+            filename = ydl.prepare_filename(info)
+        print(f"Video downloaded successfully and saved as: {filename}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Step 4: Specify the YouTube URL and Google Drive path
+youtube_url = 'https://www.youtube.com/watch?v=s_iXT0qzleQ'
+save_path = 'drive/MyDrive/Colab/YoutubeVideos'
+
+# Ensure the save directory exists
+os.makedirs(save_path, exist_ok=True)
+
+# Download the video
+download_youtube_video(youtube_url, save_path)
